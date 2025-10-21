@@ -63,9 +63,11 @@ export const config: WebdriverIO.Config = {
         // Optional, helpful for reporting
         'appium:platformVersion': process.env.PLATFORM_VERSION,
         // Point to the APK path (env preferred). Place file under ./apps by default
-        'appium:app': process.env.APK_PATH || `${process.cwd()}\\apps\\ApiDemos-debug.apk`,
+        'appium:app': process.env.APK_PATH || `${process.cwd()}/apps/ApiDemos-debug.apk`,
         // Faster startup for ApiDemos; adjust if your app differs
-        'appium:autoGrantPermissions': true
+        'appium:autoGrantPermissions': true,
+        // Increase ADB timeout for slower CI emulators
+        'appium:adbExecTimeout': 60000
     }],
 
     //
