@@ -35,13 +35,13 @@ jobs:
       - name: Run on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
-          target: google_apis
+          api-level: 30
+          target: default
           arch: x86_64
           profile: pixel_6
           disable-animations: true
           force-avd-creation: true
-          emulator-options: -no-window -no-boot-anim -noaudio -no-snapshot -gpu swiftshader_indirect -camera-back none -camera-front none
+          emulator-options: -no-window -no-boot-anim -noaudio -no-snapshot -no-snapshot-load -no-snapshot-save -wipe-data -gpu swiftshader_indirect -camera-back none -camera-front none -skip-adb-auth
           script: |
             adb kill-server || true
             adb start-server
