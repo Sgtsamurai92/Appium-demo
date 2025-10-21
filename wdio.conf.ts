@@ -68,9 +68,7 @@ export const config: WebdriverIO.Config = {
         'appium:autoGrantPermissions': true,
         // Increase ADB timeout for slower CI emulators
         'appium:adbExecTimeout': 60000,
-        // Ensure ApiDemos launches to the main activity
-        'appium:appActivity': '.ApiDemos',
-        'appium:appWaitActivity': '.ApiDemos',
+        // Fresh app state for each test
         'appium:noReset': false
     }],
 
