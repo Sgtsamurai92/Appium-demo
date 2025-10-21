@@ -1,4 +1,4 @@
-# Appium Demo (Android ApiDemos)
+gi# Appium Demo (Android ApiDemos)
 
 [![Android Appium E2E](https://github.com/Sgtsamurai92/Appium-demo/actions/workflows/android-appium.yml/badge.svg?branch=main)](https://github.com/Sgtsamurai92/Appium-demo/actions/workflows/android-appium.yml)
 
@@ -6,9 +6,7 @@ A minimal WebdriverIO + Appium v2 setup to run a native Android test on the ApiD
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE.mp4
 
-> **Note:** After uploading your demo video to a GitHub issue or PR, replace `YOUR_VIDEO_ID_HERE` with the actual video ID from the generated URL.
 
 ## Prerequisites
 
