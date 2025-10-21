@@ -4,6 +4,12 @@
 
 A minimal WebdriverIO + Appium v2 setup to run a native Android test on the ApiDemos app.
 
+## Demo Video
+
+https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE.mp4
+
+> **Note:** After uploading your demo video to a GitHub issue or PR, replace `YOUR_VIDEO_ID_HERE` with the actual video ID from the generated URL.
+
 ## Prerequisites
 
 - Node.js 18+
