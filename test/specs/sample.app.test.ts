@@ -3,9 +3,12 @@ import { expect } from '@wdio/globals'
 // WDIO runner manages the session. Ensure capabilities in wdio.conf.ts point to your APK and AVD.
 describe('Android ApiDemos app', () => {
     it('should open the app and navigate to Views > Controls', async () => {
+        // Wait a bit for the app to fully load (especially on slow CI emulators)
+        await driver.pause(3000)
+        
         // Tap on "Views"
         const views = await $('~Views')
-        await views.waitForDisplayed({ timeout: 20000 })
+        await views.waitForDisplayed({ timeout: 30000 })
         await views.click()
 
         // Tap on "Controls"
