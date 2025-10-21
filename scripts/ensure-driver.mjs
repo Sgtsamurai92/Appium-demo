@@ -5,12 +5,29 @@ const pexec = promisify(exec)
 
 async function isInstalled(name) {
   try {
-    const { stdout } = await pexec('npx appium driver list --installed', { windowsHide: true })
-    return new RegExp(`(^|\n)${name}(\n|\r|$)`, 'i').test(stdout) || stdout.toLowerCase().includes(name.toLowerCase())
-  } catch (e) {
+    // Prefer JSON for reliable parsing; fall back to plain text contains
+    const { stdout } = await pexec('npx appium driver list --installed --json', { windowsHide: true })
+    try {
+      const data = JSON.parse(stdout)
+      if (Array.isArray(data)) {
+        const names = data
+          .map(d => (d?.name || d?.driverName || '').toString().toLowerCase())
+          .filter(Boolean)
+        return names.includes(name.toLowerCase())
+      }
+      if (data && typeof data === 'object') {
+        const names = Object.keys(data).map(k => k.toLowerCase())
+        return names.includes(name.toLowerCase())
+      }
+    } catch {
+      // Non-JSON; use substring check
+      return stdout.toLowerCase().includes(name.toLowerCase())
+    }
+  } catch {
     // If listing fails, assume not installed to attempt install
     return false
   }
+  return false
 }
 
 async function ensure(name) {
@@ -20,13 +37,23 @@ async function ensure(name) {
     return
   }
   console.log(`Installing Appium driver '${name}'...`)
-  await pexec(`npx appium driver install ${name}`, { windowsHide: true })
-  console.log(`Installed Appium driver '${name}'.`)
+  try {
+    await pexec(`npx appium driver install ${name}`, { windowsHide: true })
+    console.log(`Installed Appium driver '${name}'.`)
+  } catch (e) {
+    const msg = (e?.stdout || e?.stderr || e?.message || '').toString().toLowerCase()
+    if (msg.includes('already installed')) {
+      console.log(`Appium driver '${name}' already installed (reported by CLI); continuing`)
+      return
+    }
+    console.error(e?.stdout || e?.stderr || e?.message || e)
+    throw e
+  }
 }
 
 try {
   await ensure('uiautomator2')
 } catch (e) {
-  console.error(e?.stdout || e?.message || e)
+  // ensure non-zero exit only for unexpected failures
   process.exitCode = 1
 }

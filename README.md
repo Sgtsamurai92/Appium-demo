@@ -1,5 +1,7 @@
 # Appium Demo (Android ApiDemos)
 
+[![Android Appium E2E](https://github.com/Sgtsamurai92/Appium-demo/actions/workflows/android-appium.yml/badge.svg?branch=main)](https://github.com/Sgtsamurai92/Appium-demo/actions/workflows/android-appium.yml)
+
 A minimal WebdriverIO + Appium v2 setup to run a native Android test on the ApiDemos app.
 
 ## Prerequisites
