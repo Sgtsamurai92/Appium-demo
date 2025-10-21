@@ -47,29 +47,43 @@ jobs:
             adb kill-server || true
             adb start-server
             adb devices || true
-            # Wait for emulator device to come online
-            for i in {1..60}; do
-              STATE=$(adb -s emulator-5554 get-state 2>/dev/null | tr -d '\r')
+            ANDROID_SERIAL=${ANDROID_SERIAL:-emulator-5554}
+            # Wait for emulator device to come online (max 5 min)
+            ONLINE=0
+            for i in $(seq 1 60); do
+              STATE=$(adb -s "$ANDROID_SERIAL" get-state 2>/dev/null | tr -d '\r')
               if [ "$STATE" = "device" ]; then
                 echo "Emulator is online"
+                ONLINE=1
                 break
               fi
               echo "Waiting for emulator to come online... ($i/60)"
               sleep 5
             done
+            if [ "$ONLINE" -ne 1 ]; then
+              echo "Emulator failed to come online within 5 minutes"
+              exit 1
+            }
             # Wait for fully booted
-            for i in {1..120}; do
-              BOOT=$(adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+            BOOTED=0
+            for i in $(seq 1 120); do
+              BOOT=$(adb -s "$ANDROID_SERIAL" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
               if [ "$BOOT" = "1" ]; then
                 echo "Emulator boot completed"
+                BOOTED=1
                 break
               fi
               echo "Waiting for sys.boot_completed... ($i/120)"
               sleep 5
             done
+            if [ "$BOOTED" -ne 1 ]; then
+              echo "Emulator failed to fully boot within 10 minutes"
+              adb -s "$ANDROID_SERIAL" shell getprop sys.boot_completed || true
+              exit 1
+            fi
             # Extra: toggle settings to reduce flakiness
-            adb -s emulator-5554 shell settings put global window_animation_scale 0 || true
-            adb -s emulator-5554 shell settings put global transition_animation_scale 0 || true
-            adb -s emulator-5554 shell settings put global animator_duration_scale 0 || true
-            adb -s emulator-5554 shell input keyevent 82 || true
+            adb -s "$ANDROID_SERIAL" shell settings put global window_animation_scale 0 || true
+            adb -s "$ANDROID_SERIAL" shell settings put global transition_animation_scale 0 || true
+            adb -s "$ANDROID_SERIAL" shell settings put global animator_duration_scale 0 || true
+            adb -s "$ANDROID_SERIAL" shell input keyevent 82 || true
             npm test
