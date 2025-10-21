@@ -1,0 +1,24 @@
+# Node / dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+package-lock.json
+
+# Coverage / logs / reports
+coverage/
+logs/
+*.log
+*.tmp
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build artefacts
+dist/
+out/
+
+# Android APKs (download at build time, don’t commit binaries)
+apps/*.apk
