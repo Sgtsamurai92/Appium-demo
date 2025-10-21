@@ -7,7 +7,9 @@
     "test": "npm run wdio",
     "wdio": "wdio run ./wdio.conf.ts",
     "appium": "appium",
-    "apk:fetch": "node ./scripts/fetch-apk.mjs"
+    "apk:fetch": "node ./scripts/fetch-apk.mjs",
+    "driver:ensure": "node ./scripts/ensure-driver.mjs",
+    "postinstall": "node ./scripts/ensure-driver.mjs"
   },
   "keywords": [],
   "author": "",

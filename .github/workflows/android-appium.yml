@@ -30,7 +30,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
-          npx appium driver install uiautomator2
           npm run apk:fetch
 
       - name: Run on Android emulator
