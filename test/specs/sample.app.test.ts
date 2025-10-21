@@ -6,13 +6,33 @@ describe('Android ApiDemos app', () => {
         // Wait for the app to fully load (especially on slow CI emulators)
         await driver.pause(5000)
         
-        // Debug: Get current activity
+        // Debug: Get current activity and package
         const activity = await driver.getCurrentActivity()
+        const appPackage = await driver.getCurrentPackage()
+        console.log('Current package:', appPackage)
         console.log('Current activity:', activity)
         
-        // Find Views using UiSelector (more reliable than accessibility ID)
-        const views = await $('android=new UiSelector().text("Views")')
-        await views.waitForDisplayed({ timeout: 20000 })
+        // Debug: Get page source to see what's actually on screen
+        const pageSource = await driver.getPageSource()
+        console.log('Page source length:', pageSource.length)
+        console.log('Page source contains "Views":', pageSource.includes('Views'))
+        console.log('Page source contains "API Demos":', pageSource.includes('API Demos'))
+        
+        // Find Views - try scrolling if needed
+        let views
+        try {
+            views = await $('android=new UiSelector().text("Views")')
+            if (!(await views.isDisplayed())) {
+                // Try scrolling to find it
+                await $('android=new UiScrollable(new UiSelector().scrollable(true)).scrollTextIntoView("Views")')
+                views = await $('android=new UiSelector().text("Views")')
+            }
+        } catch (e) {
+            console.log('Error finding Views:', (e as Error).message)
+            throw e
+        }
+        
+        await views.waitForDisplayed({ timeout: 10000 })
         console.log('Views element found!')
         await views.click()
 
