@@ -43,7 +43,33 @@ jobs:
           force-avd-creation: true
           emulator-options: -no-window -no-boot-anim -noaudio -no-snapshot -no-snapshot-load -no-snapshot-save -wipe-data -gpu swiftshader_indirect -camera-back none -camera-front none -skip-adb-auth
           script: |
+            set +e
             adb kill-server || true
             adb start-server
-            adb devices
+            adb devices || true
+            # Wait for emulator device to come online
+            for i in {1..60}; do
+              STATE=$(adb -s emulator-5554 get-state 2>/dev/null | tr -d '\r')
+              if [ "$STATE" = "device" ]; then
+                echo "Emulator is online"
+                break
+              fi
+              echo "Waiting for emulator to come online... ($i/60)"
+              sleep 5
+            done
+            # Wait for fully booted
+            for i in {1..120}; do
+              BOOT=$(adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+              if [ "$BOOT" = "1" ]; then
+                echo "Emulator boot completed"
+                break
+              fi
+              echo "Waiting for sys.boot_completed... ($i/120)"
+              sleep 5
+            done
+            # Extra: toggle settings to reduce flakiness
+            adb -s emulator-5554 shell settings put global window_animation_scale 0 || true
+            adb -s emulator-5554 shell settings put global transition_animation_scale 0 || true
+            adb -s emulator-5554 shell settings put global animator_duration_scale 0 || true
+            adb -s emulator-5554 shell input keyevent 82 || true
             npm test
