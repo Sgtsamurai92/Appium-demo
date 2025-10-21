@@ -66,6 +66,8 @@ export const config: WebdriverIO.Config = {
         'appium:app': process.env.APK_PATH || `${process.cwd()}/apps/ApiDemos-debug.apk`,
         // Faster startup for ApiDemos; adjust if your app differs
         'appium:autoGrantPermissions': true,
+        // Automatically accept alerts (including ANR dialogs)
+        'appium:autoAcceptAlerts': true,
         // Increase ADB timeout for slower CI emulators
         'appium:adbExecTimeout': 60000,
         // Fresh app state for each test

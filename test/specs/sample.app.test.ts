@@ -6,6 +6,18 @@ describe('Android ApiDemos app', () => {
         // Wait for the app to fully load (especially on slow CI emulators)
         await driver.pause(5000)
         
+        // Dismiss any ANR (Application Not Responding) dialogs
+        try {
+            const waitButton = await $('android=new UiSelector().resourceId("android:id/aerr_wait")')
+            if (await waitButton.isDisplayed()) {
+                console.log('⚠️ Dismissing ANR dialog...')
+                await waitButton.click()
+                await driver.pause(2000)
+            }
+        } catch (e) {
+            // No ANR dialog, continue
+        }
+        
         // Debug: Get current activity and package
         const activity = await driver.getCurrentActivity()
         const appPackage = await driver.getCurrentPackage()
