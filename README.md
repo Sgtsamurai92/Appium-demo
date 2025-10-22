@@ -6,7 +6,7 @@ A minimal WebdriverIO + Appium v2 setup to run a native Android test on the ApiD
 
 ## Demo Video
 
-(https://github.com/Sgtsamurai92/videolink)
+(https://github.com/user-attachments/assets/e5ecad69-cb40-4b06-8601-e2c6233b0dc7)
 
 ## Prerequisites
 
